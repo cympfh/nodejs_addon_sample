@@ -1,26 +1,33 @@
 {random} = Math
 mul1 = require './black_coffee'
-mul2 = (require './with_sugar/build/Release/sugar').matmul
+mul2 = (require './sugar/build/Release/sugar').matmul
+mul3 = (require './milk/build/Release/milk').matmul
 
 make = (n) ->
   for i in [1..n]
     do random for i in [1..n]
 
-time = (proc) ->
+time = (msg, proc) ->
   now = new Date
   do proc
   fin = new Date
-  console.warn fin - now
+  console.warn "#{msg}: #{fin - now} ms"
 
-n = 30
+for n in [2,4,10,100,200,300]
 
-xs = make n
-ys = make n
+  console.warn "dim: #{n}"
 
-# black coffee: 267ms
-time ->
-  mul1 n, xs, ys
+  xs = make n
+  ys = make n
 
-# with sugar:
-time ->
-  mul2 n, xs, ys
+  # black coffee: 267ms
+  time "black", ->
+    mul1 n, xs, ys
+
+  # with sugar: 2360ms
+  time "sugar", ->
+    mul2 n, xs, ys
+
+  # with milk: 17ms
+  time "milk", ->
+    mul3 n, xs, ys

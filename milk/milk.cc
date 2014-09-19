@@ -17,26 +17,33 @@ Handle<Value> Method(const Arguments& args) {
 
   // cast args
   int n = args[0]->NumberValue();
-  Local<Array> xs = Local<Array>::Cast(args[1]);
-  Local<Array> ys = Local<Array>::Cast(args[2]);
+  Local<Array> xs0 = Local<Array>::Cast(args[1]);
+  Local<Array> ys0 = Local<Array>::Cast(args[2]);
+
+  int xs[n][n];
+  int ys[n][n];
+
+  for (int i=0; i<n; ++i) {
+    for (int j=0; j<n; ++j) {
+      xs[i][j] = Local<Array>::Cast(xs0->Get(i))->Get(j)->NumberValue();
+      ys[i][j] = Local<Array>::Cast(ys0->Get(i))->Get(j)->NumberValue();
+    }
+  }
 
   // return value
   Local<Array> ret = Array::New(n);
 
   // assign into `ret`
-  for (int i=0; i < n; ++i) {
+  for (int i=0; i<n; ++i) {
     Local<Array> line = Array::New(n);
-    for (int j=0; j < n; ++j) {
+    for (int j=0; j<n; ++j) {
       double sum = 0;
-      //Local<Number> sum = Number::New(0);
-      for (int k=0; k < n; ++k) {
-        double x = Local<Array>::Cast(xs->Get(Number::New(i)))->Get(Number::New(k))->NumberValue();
-        double y = Local<Array>::Cast(ys->Get(Number::New(k)))->Get(Number::New(j))->NumberValue();
-        sum += x * y;
+      for (int k=0; k<n; ++k) {
+        sum += xs[i][k] * ys[k][j];
       }
-      line->Set(Number::New(j), Number::New(sum));
+      line->Set(j, Number::New(sum));
     }
-    ret->Set(Number::New(i), line);
+    ret->Set(i, line);
   }
   return scope.Close(ret);
 }
@@ -46,4 +53,4 @@ void init(Handle<Object> exports) {
       FunctionTemplate::New(Method)->GetFunction());
 }
 
-NODE_MODULE(sugar, init)
+NODE_MODULE(milk, init)
