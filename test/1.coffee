@@ -1,7 +1,7 @@
 {random} = Math
-mul1 = require './black_coffee'
-mul2 = (require './sugar/build/Release/sugar').matmul
-mul3 = (require './milk/build/Release/milk').matmul
+mul1 = require '../black_coffee'
+mul2 = (require '../sugar/build/Release/sugar').matmul
+mul3 = (require '../milk/build/Release/milk').matmul
 
 make = (n) ->
   for i in [1..n]
